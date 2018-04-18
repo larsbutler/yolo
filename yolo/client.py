@@ -104,13 +104,16 @@ class YoloClient(object):
         # account/stage information (including stack outputs) is read.
         self._context = None
 
+    def _load_rax_username(self):
+        self._rax_username = (
+            os.getenv(const.RACKSPACE_USERNAME) or
+            keyring.get_password(const.NAMESPACE, 'rackspace_username')
+        )
+
     @property
     def rax_username(self):
         if self._rax_username is None:
-            self._rax_username = (
-                os.getenv(const.RACKSPACE_USERNAME) or
-                keyring.get_password(const.NAMESPACE, 'rackspace_username')
-            )
+            self._load_rax_username()
             if self._rax_username is None:
                 # Couldn't find credentials in keyring or environment:
                 raise YoloError(
@@ -796,8 +799,9 @@ class YoloClient(object):
         # property, but in this case it is acceptable to have an
         # empty/non-configured username in order to show the state of the
         # application config.
+        self._load_rax_username()
         print('Rackspace user: {}'.format(self._rax_username or ''))
-        print('AWS CLI named profile: {}'.format(self.aws_profile_name))
+        print('AWS CLI named profile: {}'.format(self.aws_profile_name or ''))
 
     def clear_config(self):
         keyring.delete_password(const.NAMESPACE, 'rackspace_username')

@@ -179,7 +179,7 @@ class YoloFile(object):
     YOLOFILE_SCHEMA = volup.Schema({
         volup.Required('name'): STRING_SCHEMA,
         volup.Required('accounts'): ACCOUNTS_SCHEMA,
-        volup.Required('templates'): TEMPLATES_SCHEMA,
+        volup.Optional('templates'): TEMPLATES_SCHEMA,
         volup.Required('stages'): STAGES_SCHEMA,
         volup.Required('services'): SERVICES_SCHEMA,
     })
